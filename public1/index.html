@@ -1790,65 +1790,85 @@
       }
     }
 
-    async function analyzeWithAI(testResult) {
-      try {
-        document.getElementById('aiInsight').textContent = "Analyzing results with AI...";
-        document.getElementById('aiRecommendations').textContent = "Generating recommendations...";
-        
-        // Call OpenRouter API for analysis
-        const aiRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer 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',
-            'HTTP-Referer': 'http://localhost:3000',
-            'X-Title': 'IrIs Load Test AI'
+     async function analyzeWithAI(testResult) {
+  try {
+    // Set loading states
+    document.getElementById('aiInsight').textContent = "Analyzing results with AI...";
+    document.getElementById('aiRecommendations').textContent = "Generating recommendations...";
+    
+    // Extract key metrics from test result
+    const summary = testResult.includes("Summary report") 
+      ? testResult.split("Summary report")[1] 
+      : testResult;
+    
+    const metrics = {
+      requests: (summary.match(/http\.requests:\s+\.+\s+(\d+)/) || [0,0])[1],
+      success: (summary.match(/http\.codes\.200:\s+\.+\s+(\d+)/) || [0,0])[1],
+      errors: (summary.match(/errors\.\w+:\s+\.+\s+(\d+)/) || [0,0])[1],
+      latency: (summary.match(/http\.response_time\.mean:\s+\.+\s+([\d.]+)/) || [0,0])[1],
+      rps: (summary.match(/http\.request_rate:\s+\.+\s+([\d.]+)/) || [0,0])[1]
+    };
+
+    // Structured prompt for consistent responses
+    const prompt = `Analyze these load test metrics:
+    - Requests: ${metrics.requests}
+    - Success Rate: ${metrics.success}/${metrics.requests}
+    - Error Rate: ${metrics.errors}/${metrics.requests}
+    - Avg Latency: ${metrics.latency}ms
+    - RPS: ${metrics.rps}
+
+    Provide concise response with these exact sections:
+    [Analysis]
+    - Key findings
+    - Potential bottlenecks
+    
+    [Recommendations]
+    - Infrastructure suggestions
+    - Code optimizations
+    - Monitoring improvements`;
+
+    const aiRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer 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',
+        'HTTP-Referer': 'http://localhost:3005'
+      },
+      body: JSON.stringify({
+        model: "mistralai/mistral-7b-instruct",
+        messages: [
+          { 
+            role: "system", 
+            content: "You are a performance engineer. Respond ONLY with [Analysis] and [Recommendations] sections." 
           },
-          body: JSON.stringify({
-            model: "mistralai/mistral-7b-instruct",
-            messages: [
-              { 
-                role: "system", 
-                content: `You are a senior software performance engineer specializing in API load testing, scalability, and fault analysis. 
-                Analyze the provided load test results thoroughly and provide:
-                1. A clear summary of key findings
-                2. Performance bottlenecks identified
-                3. Potential root causes for any issues
-                4. Specific optimization recommendations
-                
-                Format your response with clear sections and bullet points for readability.`
-              },
-              { 
-                role: "user", 
-                content: `Please analyze the following Artillery load test report:\n\n${testResult}`
-              }
-            ]
-          })
-        });
-        
-        if (!aiRes.ok) {
-          throw new Error(`AI API error! status: ${aiRes.status}`);
-        }
-        
-        const aiData = await aiRes.json();
-        const aiExplanation = aiData.choices?.[0]?.message?.content || "No AI analysis returned.";
-        
-        // Split the AI response into analysis and recommendations
-        const analysisParts = aiExplanation.split(/(Recommendations:|Suggestions:|Optimization suggestions:)/i);
-        
-        if (analysisParts.length > 1) {
-          document.getElementById('aiInsight').textContent = analysisParts[0];
-          document.getElementById('aiRecommendations').textContent = analysisParts.slice(1).join('\n');
-        } else {
-          document.getElementById('aiInsight').textContent = aiExplanation;
-        }
-        
-      } catch (err) {
-        console.error("AI analysis failed:", err);
-        document.getElementById('aiInsight').textContent = "AI analysis failed: " + err.message;
-        document.getElementById('aiRecommendations').textContent = "Could not generate recommendations due to error";
-      }
-    }
+          { 
+            role: "user", 
+            content: prompt
+          }
+        ],
+        max_tokens: 400
+      })
+    });
+    
+    if (!aiRes.ok) throw new Error(`API error: ${aiRes.status}`);
+    
+    const aiData = await aiRes.json();
+    const fullResponse = aiData.choices?.[0]?.message?.content || "No response from AI";
+
+    // Guaranteed section parsing
+    const analysis = (fullResponse.match(/\[Analysis\]([\s\S]*?)(?=\[Recommendations\]|$)/) || ["", "No analysis provided"])[1];
+    const recommendations = (fullResponse.match(/\[Recommendations\]([\s\S]*)/) || ["", "No recommendations provided"])[1];
+
+    document.getElementById('aiInsight').textContent = analysis.trim();
+    document.getElementById('aiRecommendations').textContent = recommendations.trim();
+
+  } catch (err) {
+    console.error("Analysis error:", err);
+    document.getElementById('aiInsight').textContent = "Analysis failed: " + err.message;
+    document.getElementById('aiRecommendations').textContent = "Please check the configuration and try again.";
+  }
+}
+    
 
     function downloadResult() {
       const blob = new Blob([latestResult], { type: 'text/plain' });
