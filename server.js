@@ -4,7 +4,7 @@ const { exec } = require('child_process');
 const app = express();
 const PORT = 3009;
 
-app.use(express.static('public'));
+app.use(express.static('public1'));
 app.use(express.json());
 
 app.post('/run-test', (req, res) => {
