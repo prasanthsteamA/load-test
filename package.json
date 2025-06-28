@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "artillery": "^2.0.23",
     "express": "^5.1.0",
     "js-yaml": "^4.1.0",
     "nodeman": "^1.1.2"
