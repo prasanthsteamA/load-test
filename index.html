@@ -1,0 +1,1895 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>IrIs Universal Load Tester</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --primary-light: #818cf8;
+      --secondary: #f43f5e;
+      --dark: #1e293b;
+      --light: #f8fafc;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #0ea5e9;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.3);
+      padding: 40px;
+      max-width: 1000px;
+      width: 100%;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      transform-style: preserve-3d;
+      perspective: 1000px;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .glass-card:hover {
+      transform: translateY(-5px) scale(1.005);
+      box-shadow: 0 12px 40px rgba(31, 38, 135, 0.4);
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-weight: 700;
+      text-align: center;
+      color: var(--primary-dark);
+      margin-bottom: 20px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+      display: inline-block;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      border-radius: 2px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, var(--primary), var(--primary-dark));
+      border: none;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 12px 24px;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(to right, var(--primary-dark), var(--primary));
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: 0.5s;
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+
+    pre {
+      background-color: rgba(241, 245, 249, 0.8);
+      border-left: 4px solid var(--primary);
+      padding: 20px;
+      font-size: 0.9rem;
+      border-radius: 12px;
+      margin-top: 20px;
+      max-height: 300px;
+      overflow-y: auto;
+      transition: all 0.3s ease;
+    }
+
+    pre:hover {
+      box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.2);
+    }
+
+    .header-icon {
+      font-size: 60px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.8s ease-in-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+      border-radius: 12px !important;
+      border: 1px solid rgba(99, 102, 241, 0.2) !important;
+      transition: all 0.3s ease;
+    }
+
+    textarea:focus {
+      border-color: var(--primary) !important;
+      box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.25) !important;
+    }
+
+    .form-control, .form-select {
+      border-radius: 12px !important;
+      padding: 12px 16px !important;
+      border: 1px solid rgba(99, 102, 241, 0.2) !important;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary) !important;
+      box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.25) !important;
+    }
+
+    .tagline {
+      text-align: center;
+      font-weight: 500;
+      color: var(--dark);
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .result-section {
+      margin-top: 30px;
+      animation: slideUp 0.5s ease-out forwards;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--primary-dark);
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .section-title i {
+      font-size: 1.2rem;
+    }
+
+    .progress-container {
+      height: 6px;
+      background-color: rgba(241, 245, 249, 0.8);
+      border-radius: 3px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      border-radius: 3px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      font-weight: 500;
+      color: var(--dark);
+      opacity: 0.8;
+    }
+
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: var(--warning);
+      animation: pulse 1.5s infinite;
+    }
+
+    .status-dot.active {
+      background-color: var(--success);
+      animation: none;
+    }
+
+    .floating-shapes {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .shape {
+      position: absolute;
+      opacity: 0.1;
+      border-radius: 50%;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      filter: blur(40px);
+      animation: float 15s infinite linear;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      50% { transform: translate(50px, 50px) rotate(180deg); }
+      100% { transform: translate(0, 0) rotate(360deg); }
+    }
+
+    .toggle-advanced {
+      color: var(--primary);
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-advanced:hover {
+      color: var(--primary-dark);
+    }
+
+    .toggle-advanced i {
+      transition: transform 0.3s ease;
+    }
+
+    .toggle-advanced.active i {
+      transform: rotate(180deg);
+    }
+
+    .advanced-options {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease, padding 0.3s ease;
+      padding: 0 15px;
+      background: rgba(241, 245, 249, 0.5);
+      border-radius: 12px;
+    }
+
+    .advanced-options.show {
+      max-height: 500px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .test-metrics {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .metric-card {
+      flex: 1;
+      min-width: 120px;
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 5px 0;
+    }
+
+    .metric-label {
+      font-size: 0.8rem;
+      color: var(--dark);
+      opacity: 0.7;
+    }
+
+    .badge-custom {
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      color: white;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .tab-content {
+      padding: 20px 0;
+    }
+
+    .nav-tabs .nav-link {
+      border: none;
+      color: var(--dark);
+      font-weight: 500;
+      padding: 10px 20px;
+      position: relative;
+    }
+
+    .nav-tabs .nav-link.active {
+      color: var(--primary-dark);
+      background: transparent;
+    }
+
+    .nav-tabs .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50%;
+      height: 3px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      border-radius: 3px 3px 0 0;
+    }
+
+    .nav-tabs .nav-link:hover {
+      color: var(--primary);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .glass-card {
+        padding: 25px;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .test-metrics {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="floating-shapes">
+    <div class="shape" style="width: 300px; height: 300px; top: -100px; left: -100px; animation-duration: 20s;"></div>
+    <div class="shape" style="width: 200px; height: 200px; bottom: -50px; right: -50px; animation-duration: 25s; animation-delay: 2s;"></div>
+    <div class="shape" style="width: 150px; height: 150px; top: 30%; right: 10%; animation-duration: 18s; animation-delay: 4s;"></div>
+  </div>
+
+  <div class="glass-card fade-in">
+    <div class="text-center mb-4">
+      <div class="header-icon animate__animated animate__pulse animate__infinite">
+        <i class="bi bi-lightning-charge-fill"></i>
+      </div>
+      <h1 class="animate__animated animate__fadeInDown">IrIs Smart Load Testing</h1>
+      <p class="tagline animate__animated animate__fadeIn animate__delay-1s">
+        <span class="badge-custom animate__animated animate__bounceIn animate__delay-2s">New</span>
+        AI-powered performance insights & optimization recommendations
+      </p>
+    </div>
+
+    <form id="testForm" onsubmit="runTest(event)">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label"><i class="bi bi-gear"></i> HTTP Method</label>
+          <select id="method" class="form-select">
+            <option>GET</option>
+            <option>POST</option>
+            <option>PUT</option>
+            <option>DELETE</option>
+            <option>PATCH</option>
+            <option>HEAD</option>
+          </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label"><i class="bi bi-globe"></i> API Target URL</label>
+          <input id="target" class="form-control" placeholder="e.g. https://api.example.com" required />
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label"><i class="bi bi-link-45deg"></i> Endpoint Path</label>
+        <input id="endpoint" class="form-control" placeholder="e.g. /notifications/news?page=1&size=20" required />
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label"><i class="bi bi-clock"></i> Test Duration (seconds)</label>
+          <input id="duration" type="number" class="form-control" placeholder="e.g. 30" required />
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label"><i class="bi bi-speedometer2"></i> Arrival Rate (requests/sec)</label>
+          <input id="arrivalRate" type="number" class="form-control" placeholder="e.g. 10" required />
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label"><i class="bi bi-shield-lock"></i> Authorization Token (optional)</label>
+        <input id="authToken" class="form-control" placeholder="Paste Bearer token here (optional)" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label"><i class="bi bi-code-square"></i> Request Body (JSON - for POST/PUT)</label>
+        <textarea id="body" class="form-control" rows="4" placeholder='{ "key": "value" }'></textarea>
+      </div>
+
+      <div class="toggle-advanced" onclick="toggleAdvanced()">
+        <i class="bi bi-chevron-down"></i> Advanced Options
+      </div>
+      
+      <div class="advanced-options" id="advancedOptions">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label"><i class="bi bi-people"></i> Concurrent Users</label>
+            <input id="concurrentUsers" type="number" class="form-control" placeholder="Default: 10" />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label"><i class="bi bi-graph-up"></i> Ramp Up Period (sec)</label>
+            <input id="rampUp" type="number" class="form-control" placeholder="Default: 5" />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label"><i class="bi bi-list-check"></i> Additional Headers (JSON)</label>
+          <textarea id="customHeaders" class="form-control" rows="2" placeholder='{ "X-Custom-Header": "value" }'></textarea>
+        </div>
+      </div>
+
+      <div class="d-grid gap-2 mb-4">
+        <button type="submit" class="btn btn-primary btn-lg animate__animated animate__pulse animate__delay-3s">
+          <i class="bi bi-rocket"></i> Launch Load Test
+        </button>
+      </div>
+    </form>
+
+        <div class="text-center mb-3">
+        <div class="header-icon">
+          <i class="bi bi-graph-up"></i>
+        </div>
+        <h1>Test Results</h1>
+        <p class="tagline">
+          <span class="badge-custom">Live</span>
+          Performance metrics & analysis
+        </p>
+      </div>
+
+    <div class="progress-container" id="progressContainer">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="status-indicator" id="statusIndicator" style="display: none;">
+      <div class="status-dot" id="statusDot"></div>
+      <span id="statusText">Initializing test...</span>
+    </div>
+
+    <div class="test-metrics" id="testMetrics" style="display: none;">
+      <div class="metric-card animate__animated animate__fadeIn">
+        <div class="metric-value" id="metricRequests">0</div>
+        <div class="metric-label">Requests</div>
+      </div>
+      <div class="metric-card animate__animated animate__fadeIn animate__delay-1s">
+        <div class="metric-value" id="metricLatency">0ms</div>
+        <div class="metric-label">Avg Latency</div>
+      </div>
+      <div class="metric-card animate__animated animate__fadeIn animate__delay-2s">
+        <div class="metric-value" id="metricSuccess">0%</div>
+        <div class="metric-label">Success Rate</div>
+      </div>
+      <div class="metric-card animate__animated animate__fadeIn animate__delay-3s">
+        <div class="metric-value" id="metricRps">0</div>
+        <div class="metric-label">Req/sec</div>
+      </div>
+    </div>
+
+    <ul class="nav nav-tabs" id="resultTabs" role="tablist" style="display: none;">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="raw-tab" data-bs-toggle="tab" data-bs-target="#raw" type="button" role="tab">Raw Results</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="analysis-tab" data-bs-toggle="tab" data-bs-target="#analysis" type="button" role="tab">AI Analysis</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="recommendations-tab" data-bs-toggle="tab" data-bs-target="#recommendations" type="button" role="tab">Recommendations</button>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="resultTabContent">
+      <div class="tab-pane fade show active" id="raw" role="tabpanel">
+        <pre id="output">Fill in the form and click "Launch Load Test" to begin performance testing</pre>
+      </div>
+      <div class="tab-pane fade" id="analysis" role="tabpanel">
+        <pre id="aiInsight">AI-powered analysis will appear here after the test completes...</pre>
+      </div>
+      <div class="tab-pane fade" id="recommendations" role="tabpanel">
+        <pre id="aiRecommendations">Actionable optimization recommendations will appear here...</pre>
+      </div>
+    </div>
+
+    <div class="d-grid mt-3">
+      <button id="downloadBtn" class="btn btn-outline-primary" style="display:none;" onclick="downloadResult()">
+        <i class="bi bi-download"></i> Download Full Report
+      </button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let latestResult = "";
+    let testInterval;
+    let progressInterval;
+    let testStartTime;
+
+    function toggleAdvanced() {
+      const options = document.getElementById('advancedOptions');
+      const toggle = document.querySelector('.toggle-advanced');
+      options.classList.toggle('show');
+      toggle.classList.toggle('active');
+    }
+
+    function updateProgress(elapsed, duration) {
+      const progress = Math.min((elapsed / duration) * 100, 100);
+      document.getElementById('progressBar').style.width = `${progress}%`;
+      
+      if (progress < 30) {
+        document.getElementById('statusText').textContent = "Ramping up load...";
+      } else if (progress < 70) {
+        document.getElementById('statusText').textContent = "Sustaining peak load...";
+      } else {
+        document.getElementById('statusText').textContent = "Winding down test...";
+      }
+    }
+
+    function parseMetricsFromResult(result) {
+      try {
+        // Initialize default values
+        let metrics = {
+          requests: 0,
+          latency: 0,
+          successRate: 0,
+          rps: 0
+        };
+
+        // Extract from summary section (most reliable)
+        const summaryIndex = result.indexOf("Summary report");
+        if (summaryIndex > -1) {
+          const summary = result.substring(summaryIndex);
+          
+          // Total requests
+          const requestsMatch = summary.match(/http\.requests:\s+\.+\s+(\d+)/);
+          if (requestsMatch) metrics.requests = parseInt(requestsMatch[1]);
+          
+          // Success rate (200 codes)
+          const successMatch = summary.match(/http\.codes\.200:\s+\.+\s+(\d+)/);
+          const successCount = successMatch ? parseInt(successMatch[1]) : 0;
+          metrics.successRate = Math.round((successCount / Math.max(metrics.requests, 1)) * 100);
+          
+          // Latency (mean response time)
+          const latencyMatch = summary.match(/http\.response_time\.mean:\s+\.+\s+([\d.]+)/);
+          if (latencyMatch) metrics.latency = parseFloat(latencyMatch[1]);
+          
+          // Requests per second
+          const rpsMatch = summary.match(/http\.request_rate:\s+\.+\s+([\d.]+)/);
+          if (rpsMatch) metrics.rps = parseFloat(rpsMatch[1]);
+        }
+
+        // Fallback to period metrics if summary not found
+        if (metrics.requests === 0) {
+          const periods = result.split("Metrics for period to:");
+          if (periods.length > 1) {
+            // Sum up metrics from all periods
+            let totalRequests = 0;
+            let totalSuccess = 0;
+            let totalLatency = 0;
+            let latencyCount = 0;
+            let totalRps = 0;
+            let rpsCount = 0;
+
+            periods.forEach(period => {
+              // Requests
+              const reqMatch = period.match(/http\.requests:\s+\.+\s+(\d+)/);
+              if (reqMatch) totalRequests += parseInt(reqMatch[1]);
+              
+              // Success (200 codes)
+              const successMatch = period.match(/http\.codes\.200:\s+\.+\s+(\d+)/);
+              if (successMatch) totalSuccess += parseInt(successMatch[1]);
+              
+              // Latency
+              const latMatch = period.match(/http\.response_time\.mean:\s+\.+\s+([\d.]+)/);
+              if (latMatch) {
+                totalLatency += parseFloat(latMatch[1]);
+                latencyCount++;
+              }
+              
+              // RPS
+              const rpsMatch = period.match(/http\.request_rate:\s+\.+\s+([\d.]+)/);
+              if (rpsMatch) {
+                totalRps += parseFloat(rpsMatch[1]);
+                rpsCount++;
+              }
+            });
+
+            metrics.requests = totalRequests;
+            metrics.successRate = Math.round((totalSuccess / Math.max(totalRequests, 1)) * 100);
+            metrics.latency = latencyCount > 0 ? totalLatency / latencyCount : 0;
+            metrics.rps = rpsCount > 0 ? totalRps / rpsCount : 0;
+          }
+        }
+
+        return metrics;
+      } catch (e) {
+        console.error("Error parsing metrics:", e);
+        return {
+          requests: 0,
+          latency: 0,
+          successRate: 0,
+          rps: 0
+        };
+      }
+    }
+
+    function updateMetrics(metrics) {
+      document.getElementById('metricRequests').textContent = metrics.requests.toLocaleString();
+      document.getElementById('metricLatency').textContent = `${metrics.latency.toFixed(1)}ms`;
+      document.getElementById('metricSuccess').textContent = `${metrics.successRate}%`;
+      document.getElementById('metricRps').textContent = metrics.rps.toFixed(1);
+    }
+
+    async function runTest(event) {
+      event.preventDefault();
+      
+      // Reset UI
+      clearInterval(testInterval);
+      clearInterval(progressInterval);
+      document.getElementById('progressContainer').style.display = 'block';
+      document.getElementById('statusIndicator').style.display = 'flex';
+      document.getElementById('statusDot').classList.remove('active');
+      document.getElementById('testMetrics').style.display = 'none';
+      document.getElementById('resultTabs').style.display = 'none';
+      document.getElementById('downloadBtn').style.display = 'none';
+      document.getElementById('output').textContent = "Initializing load test...";
+      document.getElementById('aiInsight').textContent = "AI analysis will begin after test completes...";
+      document.getElementById('aiRecommendations').textContent = "Optimization recommendations will appear here...";
+      
+      const authToken = document.getElementById("authToken").value.trim();
+      const headers = authToken ? { authorization: authToken } : {};
+      const bodyText = document.getElementById("body").value.trim();
+      
+      // Get custom headers if provided
+      let customHeaders = {};
+      try {
+        const headersText = document.getElementById("customHeaders").value.trim();
+        if (headersText) {
+          customHeaders = JSON.parse(headersText);
+        }
+      } catch (e) {
+        console.error("Error parsing custom headers", e);
+        document.getElementById('output').textContent = "Error: Invalid JSON in custom headers";
+        return;
+      }
+
+      // Merge headers
+      const finalHeaders = { ...headers, ...customHeaders };
+
+      const payload = {
+        method: document.getElementById("method").value,
+        target: document.getElementById("target").value,
+        endpoint: document.getElementById("endpoint").value,
+        duration: parseInt(document.getElementById("duration").value) || 30,
+        arrivalRate: parseInt(document.getElementById("arrivalRate").value) || 10,
+        headers: finalHeaders,
+        body: bodyText,
+        concurrentUsers: parseInt(document.getElementById("concurrentUsers").value) || 10,
+        rampUp: parseInt(document.getElementById("rampUp").value) || 5
+      };
+
+      // Validate inputs
+      if (!payload.target || !payload.endpoint) {
+        document.getElementById('output').textContent = "Error: Target URL and Endpoint are required";
+        return;
+      }
+
+      // Show test metrics
+      document.getElementById('testMetrics').style.display = 'flex';
+      
+      // Start progress simulation
+      testStartTime = Date.now();
+      const durationMs = payload.duration * 1000;
+      progressInterval = setInterval(() => {
+        const elapsed = Date.now() - testStartTime;
+        updateProgress(elapsed, durationMs);
+        
+        if (elapsed >= durationMs) {
+          clearInterval(progressInterval);
+          document.getElementById('statusDot').classList.add('active');
+          document.getElementById('statusText').textContent = "Test completed! Analyzing results...";
+        }
+      }, 200);
+
+      try {
+        // Call backend API to run test
+        const res = await fetch('/run-test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
+        const data = await res.json();
+        latestResult = data.result || data.error;
+        
+        // Update UI with results
+        document.getElementById('output').textContent = latestResult;
+        document.getElementById('progressContainer').style.display = 'none';
+        document.getElementById('statusText').textContent = "Test completed successfully!";
+        document.getElementById('resultTabs').style.display = 'flex';
+        document.getElementById('downloadBtn').style.display = 'block';
+        
+        // Parse and display metrics
+        const metrics = parseMetricsFromResult(latestResult);
+        updateMetrics(metrics);
+        
+        // Call AI for analysis
+        await analyzeWithAI(latestResult);
+        
+      } catch (err) {
+        console.error("Test failed:", err);
+        document.getElementById('output').textContent = "Error: " + err.message;
+        document.getElementById('statusText').textContent = "Test failed!";
+        document.getElementById('statusDot').style.backgroundColor = 'var(--danger)';
+        clearInterval(progressInterval);
+      }
+    }
+
+    async function analyzeWithAI(testResult) {
+      try {
+        document.getElementById('aiInsight').textContent = "Analyzing results with AI...";
+        document.getElementById('aiRecommendations').textContent = "Generating recommendations...";
+        
+        // Call OpenRouter API for analysis
+        const aiRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer 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',
+            'HTTP-Referer': 'http://localhost:3000',
+            'X-Title': 'IrIs Load Test AI'
+          },
+          body: JSON.stringify({
+            model: "mistralai/mistral-7b-instruct",
+            messages: [
+              { 
+                role: "system", 
+                content: `You are a senior software performance engineer specializing in API load testing, scalability, and fault analysis. 
+                Analyze the provided load test results thoroughly and provide:
+                1. A clear summary of key findings
+                2. Performance bottlenecks identified
+                3. Potential root causes for any issues
+                4. Specific optimization recommendations
+                
+                Format your response with clear sections and bullet points for readability.`
+              },
+              { 
+                role: "user", 
+                content: `Please analyze the following Artillery load test report:\n\n${testResult}`
+              }
+            ]
+          })
+        });
+        
+        if (!aiRes.ok) {
+          throw new Error(`AI API error! status: ${aiRes.status}`);
+        }
+        
+        const aiData = await aiRes.json();
+        const aiExplanation = aiData.choices?.[0]?.message?.content || "No AI analysis returned.";
+        
+        // Split the AI response into analysis and recommendations
+        const analysisParts = aiExplanation.split(/(Recommendations:|Suggestions:|Optimization suggestions:)/i);
+        
+        if (analysisParts.length > 1) {
+          document.getElementById('aiInsight').textContent = analysisParts[0];
+          document.getElementById('aiRecommendations').textContent = analysisParts.slice(1).join('\n');
+        } else {
+          document.getElementById('aiInsight').textContent = aiExplanation;
+        }
+        
+      } catch (err) {
+        console.error("AI analysis failed:", err);
+        document.getElementById('aiInsight').textContent = "AI analysis failed: " + err.message;
+        document.getElementById('aiRecommendations').textContent = "Could not generate recommendations due to error";
+      }
+    }
+
+    function downloadResult() {
+      const blob = new Blob([latestResult], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `load-test-result-${new Date().toISOString().slice(0,10)}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Initialize advanced options toggle
+    document.addEventListener('DOMContentLoaded', () => {
+      // Add animation to form elements
+      const formElements = document.querySelectorAll('.form-control, .form-select, textarea, button');
+      formElements.forEach((el, i) => {
+        el.style.animationDelay = `${i * 0.1}s`;
+        el.classList.add('animate__animated', 'animate__fadeInUp');
+      });
+    });
+  </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>IrIs Universal Load Tester</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --primary-light: #818cf8;
+      --secondary: #f43f5e;
+      --dark: #1e293b;
+      --light: #f8fafc;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #0ea5e9;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+
+    .main-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      width: 100%;
+      max-width: 1600px;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.3);
+      padding: 30px;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      transform-style: preserve-3d;
+      perspective: 1000px;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-5px) scale(1.005);
+      box-shadow: 0 12px 40px rgba(31, 38, 135, 0.4);
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-weight: 700;
+      text-align: center;
+      color: var(--primary-dark);
+      margin-bottom: 20px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+      display: inline-block;
+      font-size: 1.8rem;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      border-radius: 2px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, var(--primary), var(--primary-dark));
+      border: none;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 12px 24px;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(to right, var(--primary-dark), var(--primary));
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: 0.5s;
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+
+    .tab-content {
+      padding: 15px 0;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .result-container {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    pre {
+      background-color: rgba(241, 245, 249, 0.8);
+      border-left: 4px solid var(--primary);
+      padding: 15px;
+      font-size: 0.85rem;
+      border-radius: 12px;
+      margin-top: 0;
+      overflow-y: auto;
+      flex-grow: 1;
+      min-height: 200px;
+      max-height: 400px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .nav-tabs {
+      overflow-x: auto;
+      white-space: nowrap;
+      flex-wrap: nowrap;
+      padding-bottom: 5px;
+    }
+
+    .nav-tabs .nav-link {
+      display: inline-block;
+      float: none;
+    }
+
+    .header-icon {
+      font-size: 50px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+      animation: pulse 2s infinite;
+      text-align: center;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.8s ease-in-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+      border-radius: 12px !important;
+      border: 1px solid rgba(99, 102, 241, 0.2) !important;
+      transition: all 0.3s ease;
+    }
+
+    textarea:focus {
+      border-color: var(--primary) !important;
+      box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.25) !important;
+    }
+
+    .form-control, .form-select {
+      border-radius: 12px !important;
+      padding: 10px 14px !important;
+      border: 1px solid rgba(99, 102, 241, 0.2) !important;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary) !important;
+      box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.25) !important;
+    }
+
+    .tagline {
+      text-align: center;
+      font-weight: 500;
+      color: var(--dark);
+      margin-bottom: 20px;
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
+    .result-section {
+      margin-top: 20px;
+      animation: slideUp 0.5s ease-out forwards;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary-dark);
+      margin-bottom: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .section-title i {
+      font-size: 1.1rem;
+    }
+
+    .progress-container {
+      height: 6px;
+      background-color: rgba(241, 245, 249, 0.8);
+      border-radius: 3px;
+      margin-bottom: 15px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      border-radius: 3px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 15px;
+      font-weight: 500;
+      color: var(--dark);
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--warning);
+      animation: pulse 1.5s infinite;
+    }
+
+    .status-dot.active {
+      background-color: var(--success);
+      animation: none;
+    }
+
+    .floating-shapes {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .shape {
+      position: absolute;
+      opacity: 0.1;
+      border-radius: 50%;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      filter: blur(40px);
+      animation: float 15s infinite linear;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      50% { transform: translate(50px, 50px) rotate(180deg); }
+      100% { transform: translate(0, 0) rotate(360deg); }
+    }
+
+    .toggle-advanced {
+      color: var(--primary);
+      cursor: pointer;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-advanced:hover {
+      color: var(--primary-dark);
+    }
+
+    .toggle-advanced i {
+      transition: transform 0.3s ease;
+    }
+
+    .toggle-advanced.active i {
+      transform: rotate(180deg);
+    }
+
+    .advanced-options {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease, padding 0.3s ease;
+      padding: 0 12px;
+      background: rgba(241, 245, 249, 0.5);
+      border-radius: 12px;
+    }
+
+    .advanced-options.show {
+      max-height: 400px;
+      padding: 12px;
+      margin-bottom: 15px;
+    }
+
+    .test-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .metric-card {
+      background: white;
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+    }
+
+    .metric-value {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 3px 0;
+    }
+
+    .metric-label {
+      font-size: 0.75rem;
+      color: var(--dark);
+      opacity: 0.7;
+    }
+
+    .badge-custom {
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      color: white;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 20px;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-tabs .nav-link {
+      border: none;
+      color: var(--dark);
+      font-weight: 500;
+      padding: 8px 15px;
+      position: relative;
+      font-size: 0.85rem;
+    }
+
+    .nav-tabs .nav-link.active {
+      color: var(--primary-dark);
+      background: transparent;
+    }
+
+    .nav-tabs .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40%;
+      height: 3px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      border-radius: 3px 3px 0 0;
+    }
+
+    .nav-tabs .nav-link:hover {
+      color: var(--primary);
+    }
+
+    .tab-pane {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media (max-width: 1200px) {
+      .main-container {
+        grid-template-columns: 1fr;
+        max-width: 800px;
+      }
+      
+      .glass-card {
+        padding: 25px;
+      }
+      
+      h1 {
+        font-size: 1.6rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 15px;
+      }
+      
+      .glass-card {
+        padding: 20px;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .test-metrics {
+        grid-template-columns: 1fr;
+      }
+      
+      pre {
+        max-height: 300px;
+        font-size: 0.8rem;
+      }
+      
+      .nav-tabs .nav-link {
+        padding: 10px 15px;
+      }
+      
+      .form-control, .form-select, textarea {
+        padding: 8px 12px !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="floating-shapes">
+    <div class="shape" style="width: 300px; height: 300px; top: -100px; left: -100px; animation-duration: 20s;"></div>
+    <div class="shape" style="width: 200px; height: 200px; bottom: -50px; right: -50px; animation-duration: 25s; animation-delay: 2s;"></div>
+    <div class="shape" style="width: 150px; height: 150px; top: 30%; right: 10%; animation-duration: 18s; animation-delay: 4s;"></div>
+  </div>
+
+  <div class="main-container">
+    <!-- Left Side - Test Form -->
+    <div class="glass-card fade-in">
+      <div class="text-center mb-3">
+        <div class="header-icon animate__animated animate__pulse animate__infinite">
+          <i class="bi bi-lightning-charge-fill"></i>
+        </div>
+        <h1 class="animate__animated animate__fadeInDown">IrIs Load Testing</h1>
+        <p class="tagline animate__animated animate__fadeIn animate__delay-1s">
+          <span class="badge-custom animate__animated animate__bounceIn animate__delay-2s">New</span>
+          Configure your performance test
+        </p>
+      </div>
+
+      <form id="testForm" onsubmit="runTest(event)">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label"><i class="bi bi-gear"></i> HTTP Method</label>
+            <select id="method" class="form-select">
+              <option>GET</option>
+              <option>POST</option>
+              <option>PUT</option>
+              <option>DELETE</option>
+              <option>PATCH</option>
+              <option>HEAD</option>
+            </select>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label"><i class="bi bi-globe"></i> API Target URL</label>
+            <input id="target" class="form-control" placeholder="e.g. https://api.example.com" required />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label"><i class="bi bi-link-45deg"></i> Endpoint Path</label>
+          <input id="endpoint" class="form-control" placeholder="e.g. /notifications/news?page=1&size=20" required />
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label"><i class="bi bi-clock"></i> Test Duration (seconds)</label>
+            <input id="duration" type="number" class="form-control" placeholder="e.g. 30" required />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label"><i class="bi bi-speedometer2"></i> Arrival Rate (requests/sec)</label>
+            <input id="arrivalRate" type="number" class="form-control" placeholder="e.g. 10" required />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label"><i class="bi bi-shield-lock"></i> Authorization Token (optional)</label>
+          <input id="authToken" class="form-control" placeholder="Paste Bearer token here (optional)" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label"><i class="bi bi-code-square"></i> Request Body (JSON - for POST/PUT)</label>
+          <textarea id="body" class="form-control" rows="4" placeholder='{ "key": "value" }'></textarea>
+        </div>
+
+        <div class="toggle-advanced" onclick="toggleAdvanced()">
+          <i class="bi bi-chevron-down"></i> Advanced Options
+        </div>
+        
+        <div class="advanced-options" id="advancedOptions">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label"><i class="bi bi-people"></i> Concurrent Users</label>
+              <input id="concurrentUsers" type="number" class="form-control" placeholder="Default: 10" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label"><i class="bi bi-graph-up"></i> Ramp Up Period (sec)</label>
+              <input id="rampUp" type="number" class="form-control" placeholder="Default: 5" />
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label"><i class="bi bi-list-check"></i> Additional Headers (JSON)</label>
+            <textarea id="customHeaders" class="form-control" rows="2" placeholder='{ "X-Custom-Header": "value" }'></textarea>
+          </div>
+        </div>
+
+        <div class="d-grid gap-2 mb-3">
+          <button type="submit" class="btn btn-primary btn-lg animate__animated animate__pulse animate__delay-3s">
+            <i class="bi bi-rocket"></i> Launch Load Test
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Side - Results -->
+    <div class="glass-card fade-in">
+      <div class="text-center mb-3">
+        <div class="header-icon">
+          <i class="bi bi-graph-up"></i>
+        </div>
+        <h1>Test Results</h1>
+        <p class="tagline">
+          <span class="badge-custom">Live</span>
+          Performance metrics & analysis
+        </p>
+      </div>
+
+      <div class="progress-container" id="progressContainer">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <div class="status-indicator" id="statusIndicator" style="display: none;">
+        <div class="status-dot" id="statusDot"></div>
+        <span id="statusText">Initializing test...</span>
+      </div>
+
+      <div class="test-metrics" id="testMetrics" style="display: none;">
+        <div class="metric-card animate__animated animate__fadeIn">
+          <div class="metric-value" id="metricRequests">0</div>
+          <div class="metric-label">Requests</div>
+        </div>
+        <div class="metric-card animate__animated animate__fadeIn animate__delay-1s">
+          <div class="metric-value" id="metricLatency">0ms</div>
+          <div class="metric-label">Avg Latency</div>
+        </div>
+        <div class="metric-card animate__animated animate__fadeIn animate__delay-2s">
+          <div class="metric-value" id="metricSuccess">0%</div>
+          <div class="metric-label">Success Rate</div>
+        </div>
+        <div class="metric-card animate__animated animate__fadeIn animate__delay-3s">
+          <div class="metric-value" id="metricRps">0</div>
+          <div class="metric-label">Req/sec</div>
+        </div>
+      </div>
+
+      <ul class="nav nav-tabs" id="resultTabs" role="tablist" style="display: none;">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="raw-tab" data-bs-toggle="tab" data-bs-target="#raw" type="button" role="tab">Raw Results</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="analysis-tab" data-bs-toggle="tab" data-bs-target="#analysis" type="button" role="tab">AI Analysis</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="recommendations-tab" data-bs-toggle="tab" data-bs-target="#recommendations" type="button" role="tab">Recommendations</button>
+        </li>
+      </ul>
+
+      <div class="tab-content" id="resultTabContent">
+        <div class="tab-pane fade show active" id="raw" role="tabpanel">
+          <div class="result-container">
+            <pre id="output">Configure and run a test to see results here</pre>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="analysis" role="tabpanel">
+          <div class="result-container">
+            <pre id="aiInsight">AI-powered analysis will appear here after test completion</pre>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="recommendations" role="tabpanel">
+          <div class="result-container">
+            <pre id="aiRecommendations">Optimization recommendations will appear here</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-grid mt-3">
+        <button id="downloadBtn" class="btn btn-outline-primary" style="display:none;" onclick="downloadResult()">
+          <i class="bi bi-download"></i> Download Full Report
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let latestResult = "";
+    let testInterval;
+    let progressInterval;
+    let testStartTime;
+
+    function toggleAdvanced() {
+      const options = document.getElementById('advancedOptions');
+      const toggle = document.querySelector('.toggle-advanced');
+      options.classList.toggle('show');
+      toggle.classList.toggle('active');
+    }
+
+    function updateProgress(elapsed, duration) {
+      const progress = Math.min((elapsed / duration) * 100, 100);
+      document.getElementById('progressBar').style.width = `${progress}%`;
+      
+      if (progress < 30) {
+        document.getElementById('statusText').textContent = "Ramping up load...";
+      } else if (progress < 70) {
+        document.getElementById('statusText').textContent = "Sustaining peak load...";
+      } else {
+        document.getElementById('statusText').textContent = "Winding down test...";
+      }
+    }
+
+    function parseMetricsFromResult(result) {
+      try {
+        // Initialize default values
+        let metrics = {
+          requests: 0,
+          latency: 0,
+          successRate: 0,
+          rps: 0
+        };
+
+        // Extract from summary section (most reliable)
+        const summaryIndex = result.indexOf("Summary report");
+        if (summaryIndex > -1) {
+          const summary = result.substring(summaryIndex);
+          
+          // Total requests
+          const requestsMatch = summary.match(/http\.requests:\s+\.+\s+(\d+)/);
+          if (requestsMatch) metrics.requests = parseInt(requestsMatch[1]);
+          
+          // Success rate (200 codes)
+          const successMatch = summary.match(/http\.codes\.200:\s+\.+\s+(\d+)/);
+          const successCount = successMatch ? parseInt(successMatch[1]) : 0;
+          metrics.successRate = Math.round((successCount / Math.max(metrics.requests, 1)) * 100);
+          
+          // Latency (mean response time)
+          const latencyMatch = summary.match(/http\.response_time\.mean:\s+\.+\s+([\d.]+)/);
+          if (latencyMatch) metrics.latency = parseFloat(latencyMatch[1]);
+          
+          // Requests per second
+          const rpsMatch = summary.match(/http\.request_rate:\s+\.+\s+([\d.]+)/);
+          if (rpsMatch) metrics.rps = parseFloat(rpsMatch[1]);
+        }
+
+        // Fallback to period metrics if summary not found
+        if (metrics.requests === 0) {
+          const periods = result.split("Metrics for period to:");
+          if (periods.length > 1) {
+            // Sum up metrics from all periods
+            let totalRequests = 0;
+            let totalSuccess = 0;
+            let totalLatency = 0;
+            let latencyCount = 0;
+            let totalRps = 0;
+            let rpsCount = 0;
+
+            periods.forEach(period => {
+              // Requests
+              const reqMatch = period.match(/http\.requests:\s+\.+\s+(\d+)/);
+              if (reqMatch) totalRequests += parseInt(reqMatch[1]);
+              
+              // Success (200 codes)
+              const successMatch = period.match(/http\.codes\.200:\s+\.+\s+(\d+)/);
+              if (successMatch) totalSuccess += parseInt(successMatch[1]);
+              
+              // Latency
+              const latMatch = period.match(/http\.response_time\.mean:\s+\.+\s+([\d.]+)/);
+              if (latMatch) {
+                totalLatency += parseFloat(latMatch[1]);
+                latencyCount++;
+              }
+              
+              // RPS
+              const rpsMatch = period.match(/http\.request_rate:\s+\.+\s+([\d.]+)/);
+              if (rpsMatch) {
+                totalRps += parseFloat(rpsMatch[1]);
+                rpsCount++;
+              }
+            });
+
+            metrics.requests = totalRequests;
+            metrics.successRate = Math.round((totalSuccess / Math.max(totalRequests, 1)) * 100);
+            metrics.latency = latencyCount > 0 ? totalLatency / latencyCount : 0;
+            metrics.rps = rpsCount > 0 ? totalRps / rpsCount : 0;
+          }
+        }
+
+        return metrics;
+      } catch (e) {
+        console.error("Error parsing metrics:", e);
+        return {
+          requests: 0,
+          latency: 0,
+          successRate: 0,
+          rps: 0
+        };
+      }
+    }
+
+    function updateMetrics(metrics) {
+      document.getElementById('metricRequests').textContent = metrics.requests.toLocaleString();
+      document.getElementById('metricLatency').textContent = `${metrics.latency.toFixed(1)}ms`;
+      document.getElementById('metricSuccess').textContent = `${metrics.successRate}%`;
+      document.getElementById('metricRps').textContent = metrics.rps.toFixed(1);
+    }
+
+    async function runTest(event) {
+      event.preventDefault();
+      
+      // Reset UI
+      clearInterval(testInterval);
+      clearInterval(progressInterval);
+      document.getElementById('progressContainer').style.display = 'block';
+      document.getElementById('statusIndicator').style.display = 'flex';
+      document.getElementById('statusDot').classList.remove('active');
+      document.getElementById('testMetrics').style.display = 'none';
+      document.getElementById('resultTabs').style.display = 'none';
+      document.getElementById('downloadBtn').style.display = 'none';
+      document.getElementById('output').textContent = "Initializing load test...";
+      document.getElementById('aiInsight').textContent = "AI analysis will begin after test completes...";
+      document.getElementById('aiRecommendations').textContent = "Optimization recommendations will appear here...";
+      
+      const authToken = document.getElementById("authToken").value.trim();
+      const headers = authToken ? { authorization: authToken } : {};
+      const bodyText = document.getElementById("body").value.trim();
+      
+      // Get custom headers if provided
+      let customHeaders = {};
+      try {
+        const headersText = document.getElementById("customHeaders").value.trim();
+        if (headersText) {
+          customHeaders = JSON.parse(headersText);
+        }
+      } catch (e) {
+        console.error("Error parsing custom headers", e);
+        document.getElementById('output').textContent = "Error: Invalid JSON in custom headers";
+        return;
+      }
+
+      // Merge headers
+      const finalHeaders = { ...headers, ...customHeaders };
+
+      const payload = {
+        method: document.getElementById("method").value,
+        target: document.getElementById("target").value,
+        endpoint: document.getElementById("endpoint").value,
+        duration: parseInt(document.getElementById("duration").value) || 30,
+        arrivalRate: parseInt(document.getElementById("arrivalRate").value) || 10,
+        headers: finalHeaders,
+        body: bodyText,
+        concurrentUsers: parseInt(document.getElementById("concurrentUsers").value) || 10,
+        rampUp: parseInt(document.getElementById("rampUp").value) || 5
+      };
+
+      // Validate inputs
+      if (!payload.target || !payload.endpoint) {
+        document.getElementById('output').textContent = "Error: Target URL and Endpoint are required";
+        return;
+      }
+
+      // Show test metrics
+      document.getElementById('testMetrics').style.display = 'grid';
+      
+      // Start progress simulation
+      testStartTime = Date.now();
+      const durationMs = payload.duration * 1000;
+      progressInterval = setInterval(() => {
+        const elapsed = Date.now() - testStartTime;
+        updateProgress(elapsed, durationMs);
+        
+        if (elapsed >= durationMs) {
+          clearInterval(progressInterval);
+          document.getElementById('statusDot').classList.add('active');
+          document.getElementById('statusText').textContent = "Test completed! Analyzing results...";
+        }
+      }, 200);
+
+      try {
+        // Call backend API to run test
+        const res = await fetch('/run-test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
+        const data = await res.json();
+        latestResult = data.result || data.error;
+        
+        // Update UI with results
+        document.getElementById('output').textContent = latestResult;
+        document.getElementById('progressContainer').style.display = 'none';
+        document.getElementById('statusText').textContent = "Test completed successfully!";
+        document.getElementById('resultTabs').style.display = 'flex';
+        document.getElementById('downloadBtn').style.display = 'block';
+        
+        // Parse and display metrics
+        const metrics = parseMetricsFromResult(latestResult);
+        updateMetrics(metrics);
+        
+        // Call AI for analysis
+        await analyzeWithAI(latestResult);
+        
+      } catch (err) {
+        console.error("Test failed:", err);
+        document.getElementById('output').textContent = "Error: " + err.message;
+        document.getElementById('statusText').textContent = "Test failed!";
+        document.getElementById('statusDot').style.backgroundColor = 'var(--danger)';
+        clearInterval(progressInterval);
+      }
+    }
+
+    async function analyzeWithAI(testResult) {
+      try {
+        document.getElementById('aiInsight').textContent = "Analyzing results with AI...";
+        document.getElementById('aiRecommendations').textContent = "Generating recommendations...";
+        
+        // Call OpenRouter API for analysis
+        const aiRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer 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',
+            'HTTP-Referer': 'http://localhost:3000',
+            'X-Title': 'IrIs Load Test AI'
+          },
+          body: JSON.stringify({
+            model: "mistralai/mistral-7b-instruct",
+            messages: [
+              { 
+                role: "system", 
+                content: `You are a senior software performance engineer specializing in API load testing, scalability, and fault analysis. 
+                Analyze the provided load test results thoroughly and provide:
+                1. A clear summary of key findings
+                2. Performance bottlenecks identified
+                3. Potential root causes for any issues
+                4. Specific optimization recommendations
+                
+                Format your response with clear sections and bullet points for readability.`
+              },
+              { 
+                role: "user", 
+                content: `Please analyze the following Artillery load test report:\n\n${testResult}`
+              }
+            ]
+          })
+        });
+        
+        if (!aiRes.ok) {
+          throw new Error(`AI API error! status: ${aiRes.status}`);
+        }
+        
+        const aiData = await aiRes.json();
+        const aiExplanation = aiData.choices?.[0]?.message?.content || "No AI analysis returned.";
+        
+        // Split the AI response into analysis and recommendations
+        const analysisParts = aiExplanation.split(/(Recommendations:|Suggestions:|Optimization suggestions:)/i);
+        
+        if (analysisParts.length > 1) {
+          document.getElementById('aiInsight').textContent = analysisParts[0];
+          document.getElementById('aiRecommendations').textContent = analysisParts.slice(1).join('\n');
+        } else {
+          document.getElementById('aiInsight').textContent = aiExplanation;
+        }
+        
+      } catch (err) {
+        console.error("AI analysis failed:", err);
+        document.getElementById('aiInsight').textContent = "AI analysis failed: " + err.message;
+        document.getElementById('aiRecommendations').textContent = "Could not generate recommendations due to error";
+      }
+    }
+
+    function downloadResult() {
+      const blob = new Blob([latestResult], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `load-test-result-${new Date().toISOString().slice(0,10)}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Initialize advanced options toggle
+    document.addEventListener('DOMContentLoaded', () => {
+      // Add animation to form elements
+      const formElements = document.querySelectorAll('.form-control, .form-select, textarea, button');
+      formElements.forEach((el, i) => {
+        el.style.animationDelay = `${i * 0.1}s`;
+        el.classList.add('animate__animated', 'animate__fadeInUp');
+      });
+
+      // Add resize observer for text containers
+      const resizeObserver = new ResizeObserver(entries => {
+        for (let entry of entries) {
+          const preElements = entry.target.querySelectorAll('pre');
+          preElements.forEach(pre => {
+            // Reset font size first
+            pre.style.fontSize = '';
+            
+            // If content is overflowing, reduce font size
+            if (pre.scrollHeight > pre.clientHeight) {
+              const currentSize = parseFloat(window.getComputedStyle(pre).fontSize);
+              pre.style.fontSize = `${currentSize * 0.95}px`;
+            }
+          });
+        }
+      });
+
+      document.querySelectorAll('.result-container').forEach(container => {
+        resizeObserver.observe(container);
+      });
+    });
+  </script>
+</body>
+</html>
